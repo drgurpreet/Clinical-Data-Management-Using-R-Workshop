@@ -1,0 +1,100 @@
+---
+title: "CLinical Data Management Wksp 2026"
+author: "AFMC, Pune"
+format: html
+execute:
+  echo: false
+bibliography: references.bib
+---
+
+# Introduction
+
+This demo is to represent the workflow as given by a seminal paper.[@ong2019]
+
+## Packages
+
+Packages neeed to be installed once and called using a function `library()` everytime before use in a session.
+
+```{r}
+# install packages
+# install.packages("here")
+# install.packages("rio")
+# install.packages("tidyverse")
+# install.packages("gtsummary")
+# Load packages
+library(here)
+library(rio)
+library(tidyverse)
+library(gtsummary)
+
+```
+
+# Load Data
+
+```{r}
+# Path
+path <- here("data",
+     "simulated_clinical_04july2026.xlsx")
+# Import
+df1 <- import(path, setclass = "tibble")
+
+# Path
+path <- here("data",
+     "site04_04july2026.xlsx")
+# Import
+df2 <- import(path, setclass = "tibble")
+
+df <- rbind(df1, df2)
+```
+
+# Understand and clean/wrangle Data
+
+```{r}
+# ## Dimensions
+df |> 
+  dim()
+
+# Glipmpse
+df |> 
+  skimr::skim()
+
+```
+
+# Make some plots/ figures
+
+```{r}
+df |> # dataset specification
+  ggplot() + # call for a plot
+  geom_bar( # mention geometry
+    aes(x = Sex) # mention aesthestics incl x and y axis
+  ) +
+  labs(title = "My first plot") # additional settings
+```
+
+```{r}
+df |> 
+  ggplot() +
+  geom_point(
+    aes(x = Age, y = BMI)
+  ) +
+  geom_smooth(aes(x = Age, y = BMI), method = lm) +
+  labs(title = "My first plot",
+       subtitle = "My first plot subtitle")
+```
+
+# Make some tables
+
+## Participant characteristics
+
+```{r}
+df |> 
+  select(Age, Sex, BMI, Alcohol,HbA1c, Study_Arm) |> 
+  tbl_summary(by = Study_Arm) |> 
+  add_p()
+```
+
+# Discussion
+
+Thisn my discussion with a reference
+
+# References
